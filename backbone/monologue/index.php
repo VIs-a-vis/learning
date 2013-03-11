@@ -13,6 +13,8 @@ if ($_POST && isset($_POST['text'])) {
     <head>
         <meta charset="utf-8" />
         <script src="jquery-1.9.1.min.js"></script>
+        <script src="underscore-min.js"></script>
+        <script src="backbone-min.js"></script>
         <script src="main.js"></script>
         <title>Understanding Backbone app</title>
     </head>

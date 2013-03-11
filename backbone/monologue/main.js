@@ -1,17 +1,24 @@
+var events = _.clone(Backbone.Events);
+
 var Statuses = function() {};
 
-Statuses.prototype.add = function(options) {
+Statuses.prototype.add = function(text) {
     $.ajax({
         url: 'index.php',
         type: 'POST',
         dataType: 'json',
-        data: { text: options.text },
-        success: options.success
+        data: { text: text },
+        success: function(data) {
+            events.trigger('status:add', data.text);
+        }
     });
 };
 
 var NewStatusView = function(options) {
     this.statuses = options.statuses;
+
+    events.on('status:add', this.appendStatus, this);
+    events.on('status:add', this.clearInput, this);
 
     var add = $.proxy(this.addStatus, this);
     $('#new-status form').submit(add);
@@ -20,15 +27,7 @@ var NewStatusView = function(options) {
 NewStatusView.prototype.addStatus = function(e) {
     e.preventDefault();
 
-    var that = this;
-
-    this.statuses.add({
-        text: $('#new-status').find('textarea').val(),
-        success: function(data) {
-            that.appendStatus(data.text);
-            that.clearInput();
-        }
-    });
+    this.statuses.add($('#new-status').find('textarea').val());
 };
 
 NewStatusView.prototype.appendStatus = function(text) {
