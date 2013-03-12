@@ -16,29 +16,43 @@ Statuses.prototype.add = function(text) {
 
 var NewStatusView = function(options) {
     this.statuses = options.statuses;
+    this.el = options.el;
 
-    events.on('status:add', this.appendStatus, this);
     events.on('status:add', this.clearInput, this);
 
     var add = $.proxy(this.addStatus, this);
-    $('#new-status form').submit(add);
+    this.$('form').submit(add);
 };
 
 NewStatusView.prototype.addStatus = function(e) {
     e.preventDefault();
 
-    this.statuses.add($('#new-status').find('textarea').val());
-};
-
-NewStatusView.prototype.appendStatus = function(text) {
-    $('#statuses ul').append('<li>' + text + '</li>');
+    this.statuses.add(this.$('textarea').val());
 };
 
 NewStatusView.prototype.clearInput = function() {
-    $('#new-status').find('textarea').val('');
+    this.$('textarea').val('');
+};
+
+NewStatusView.prototype.$ = function(selector) {
+    return this.el.find(selector);
+};
+
+var StatusesView = function(options) {
+    this.el = options.el;
+
+    events.on('status:add', this.appendStatus, this);
+};
+
+StatusesView.prototype.appendStatus = function(text) {
+    this.$('ul').append('<li>' + text + '</li>');
+};
+StatusesView.prototype.$ = function(selector) {
+    return this.el.find(selector);
 };
 
 $(document).ready(function() {
     var statuses = new Statuses();
-    new NewStatusView({ statuses: statuses });
+    new NewStatusView({ el: $('#new-status'), statuses: statuses });
+    new StatusesView({ el: $('#statuses') });
 });
