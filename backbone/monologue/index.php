@@ -1,13 +1,3 @@
-<?php
-
-if ($_POST && isset($_POST['text'])) {
-    $text = htmlspecialchars(trim($_POST['text']));
-    echo json_encode(array('text' => $text));
-    die;
-}
-
-?>
-
 <!DOCTYPE html>
 <html>
     <head>

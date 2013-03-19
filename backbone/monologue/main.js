@@ -1,17 +1,21 @@
 var events = _.clone(Backbone.Events);
 
+var Status = Backbone.Model.extend({
+    url: 'status.php'
+});
+
 var Statuses = function() {};
 
 Statuses.prototype.add = function(text) {
-    $.ajax({
-        url: 'index.php',
-        type: 'POST',
-        dataType: 'json',
-        data: { text: text },
-        success: function(data) {
-            events.trigger('status:add', data.text);
+    var status = new Status();
+    status.save(
+        { text: text },
+        {
+            success: function(model, data) {
+                events.trigger('status:add', data.text);
+            }
         }
-    });
+    );
 };
 
 var NewStatusView = Backbone.View.extend({
